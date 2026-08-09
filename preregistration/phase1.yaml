@@ -1,0 +1,73 @@
+study:
+  id: SRRD-P1-FALSIFICATION-2026-08-09
+  title: SRRD -> SRIV -> CVP construct-separation falsification
+  status: frozen-before-confirmatory-run
+  design: synthetic Monte Carlo, state-matched paired histories
+
+operational_definitions:
+  SRRD:
+    level: mechanism
+    inputs: [slow_rule_targets, working_rule_recovery_paths]
+    high_gate:
+      rule_separation_ci_low_gte: 1.00
+      recovery_fraction_ci_low_gte: 0.70
+    forbidden_inputs: [diagnostic_predictions, viability_labels, utility, CVP]
+  SRIV:
+    expansion: State-matched Rule-induced Intervention Variance
+    level: dynamical_phenomenon
+    statistic: mean normalized Bernoulli Jensen-Shannon divergence
+    inputs: [paired_diagnostic_predictions_after_common_intervention]
+    positive_gate_ci_low_gte: 0.02
+    forbidden_inputs: [viability_labels, utility, latent_rule_targets]
+  CVP:
+    expansion: Counterfactual Viability Preservation
+    level: observable
+    statistic: relative held-out log-loss reduction versus no-recovery ablation
+    inputs: [held_out_labels, full_predictions, ablated_predictions]
+    positive_gate_ci_low_gte: 0.10
+    null_equivalence_margin: 0.02
+    forbidden_inputs: [history_code, latent_rule_targets, SRRD, SRIV]
+
+histories:
+  H1: [A, B, C]
+  H2: [B, A, C]
+  controls:
+    task_counts_equal: true
+    common_final_suffix: C
+    fast_state_reset: true
+    working_rule_reset: true
+
+primary_counterexample:
+  name: orthogonal_counterexample
+  construction: history-dependent rule reconstruction lies in the kernel of the CVP readout
+  required_pattern:
+    SRRD: high
+    SRIV: positive
+    CVP: equivalent_to_zero
+
+controls:
+  - aligned_positive
+  - order_invariant_viable
+  - history_shuffle
+  - frozen_rule
+  - flat_state_matched
+
+sampling:
+  seeds_per_scenario: 400
+  recovery_horizon: 24
+  diagnostic_probes_per_seed: 768
+  viability_probes_per_seed: 768
+  confidence_interval: percentile_bootstrap_95
+  bootstrap_replicates: 4000
+  master_seed: 20260809
+  random_streams: [parameters, diagnostic, viability]
+
+decision_rule:
+  success_requires_all_gates: true
+  scientific_consequence_if_success: >-
+    Reject the unconditional implication SRRD -> CVP. Retain only the conditional
+    hierarchy SRRD -> SRIV and SRIV + nonzero viability coupling -> CVP.
+  scientific_consequence_if_failure: >-
+    The proposed separation is not established; do not use CVP as an independent
+    observable until the failing gate is repaired and re-preregistered.
+

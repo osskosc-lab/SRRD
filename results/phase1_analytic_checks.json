@@ -1,0 +1,22 @@
+{
+  "all_checks_pass": true,
+  "checks": {
+    "rule_separation_closed_form": true,
+    "recovery_fraction_closed_form": true,
+    "orthogonal_CVP_exact_zero": true,
+    "state_matching_exact": true,
+    "orthogonal_rule_in_CVP_kernel": true
+  },
+  "max_absolute_errors": {
+    "rule_separation": 6.661338147750939e-16,
+    "recovery_fraction": 2.220446049250313e-16,
+    "orthogonal_cvp": 0.0,
+    "state_match": 0.0,
+    "orthogonal_rule_readout_dot": 0.0
+  },
+  "closed_form_equations": {
+    "rule_separation": "2 * suffix_decay * (1 - contraction) * drive * ||direction||",
+    "recovery_fraction": "1 - mean_{k=1..K}(1 - gamma)^k",
+    "orthogonal_cvp": "x=(x1,0), theta=(0,theta2) => x^T theta=0 => p=0.5"
+  }
+}

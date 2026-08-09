@@ -225,7 +225,7 @@ python scripts/verify_results.py --results results
 
 主な出力:
 
-- `results/phase1_seed_metrics.csv`: 全2,400 seed
+- `results/phase1_seed_metrics.csv.gz`: 全2,400 seed の確証実行スナップショット（再実行時は非圧縮CSVを生成）
 - `results/phase1_summary.csv`: 平均・95% CI
 - `results/phase1_trajectories.csv`: 回復軌道
 - `results/phase1_gates.json`: 事前登録 Gate 判定
@@ -241,4 +241,3 @@ Phase 2 では、潜在規則を直接参照できないブラックボックス
 - state matching の等価性検定と residual imbalance 監査
 - SRIV が CVP を予測しない領域の事前登録
 - 合成系ではなく外部データでの再現
-

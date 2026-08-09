@@ -1,0 +1,30 @@
+{
+  "generated_at": "2026-08-09T10:30:25+00:00",
+  "config": {
+    "n_seeds": 400,
+    "horizon": 24,
+    "n_diagnostic_probes": 768,
+    "n_viability_probes": 768,
+    "history_contraction": 0.4,
+    "common_suffix_decay": 0.9,
+    "inverse_temperature": 1.5,
+    "drive_log_sd": 0.05,
+    "recovery_rate_sd": 0.01,
+    "bootstrap_replicates": 4000,
+    "state_match_tolerance": 1e-12,
+    "rule_separation_threshold": 1.0,
+    "recovery_fraction_threshold": 0.7,
+    "sriv_threshold": 0.02,
+    "cvp_positive_threshold": 0.1,
+    "cvp_equivalence_margin": 0.02,
+    "random_seed": 20260809
+  },
+  "scenario_count": 6,
+  "seed_rows": 2400,
+  "trajectory_rows": 60000,
+  "independent_random_streams": [
+    "parameters",
+    "diagnostic",
+    "viability"
+  ]
+}

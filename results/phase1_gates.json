@@ -1,0 +1,14 @@
+{
+  "all_gates_pass": true,
+  "gates": {
+    "G0_state_matching": true,
+    "G1_aligned_high_SRRD": true,
+    "G2_counterexample_high_SRRD": true,
+    "G3_counterexample_has_SRIV": true,
+    "G4_counterexample_low_CVP": true,
+    "G5_aligned_positive_CVP": true,
+    "G6_converse_separation": true,
+    "G7_frozen_rule_fails_reconstruction": true
+  },
+  "interpretation": "The unconditional implication SRRD -> CVP is falsified by construction; the hierarchy survives only with an explicit observation/viability coupling condition."
+}
