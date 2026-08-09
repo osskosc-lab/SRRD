@@ -1,0 +1,50 @@
+[
+  {
+    "name": "markov_ssm",
+    "family": "current_state",
+    "feature_dim": 24,
+    "trainable_parameters": 156
+  },
+  {
+    "name": "flat_rnn_0_5x",
+    "family": "flat_recurrent",
+    "feature_dim": 12,
+    "trainable_parameters": 84
+  },
+  {
+    "name": "flat_rnn_1x",
+    "family": "flat_recurrent",
+    "feature_dim": 24,
+    "trainable_parameters": 156
+  },
+  {
+    "name": "flat_rnn_2x",
+    "family": "flat_recurrent",
+    "feature_dim": 48,
+    "trainable_parameters": 300
+  },
+  {
+    "name": "flat_rnn_4x",
+    "family": "flat_recurrent",
+    "feature_dim": 96,
+    "trainable_parameters": 588
+  },
+  {
+    "name": "adaptive_psr",
+    "family": "predictive_state",
+    "feature_dim": 24,
+    "trainable_parameters": 156
+  },
+  {
+    "name": "history_mpc",
+    "family": "history_control",
+    "feature_dim": 24,
+    "trainable_parameters": 156
+  },
+  {
+    "name": "srrd_bilevel",
+    "family": "bilevel_reconstruction",
+    "feature_dim": 24,
+    "trainable_parameters": 156
+  }
+]

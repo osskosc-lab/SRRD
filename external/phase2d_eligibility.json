@@ -1,0 +1,50 @@
+{
+  "audit_date": "2026-08-09",
+  "decision": "no_inspected_public_dataset_is_phase2d_confirmatory_eligible",
+  "required_fields": [
+    "ordered_history_assignment",
+    "observable_state_matching_variables",
+    "randomized_C1_probe_sham",
+    "frozen_OOD_C2",
+    "post_intervention_outcome"
+  ],
+  "candidates": [
+    {
+      "name": "Nano-drone System Identification Benchmark",
+      "source": "https://arxiv.org/abs/2512.14450",
+      "data_repository": "https://github.com/idsia-robotics/nanodrone-sysid-benchmark",
+      "real_world": true,
+      "observable_inputs_outputs": true,
+      "trajectory_level_holdout": true,
+      "ordered_history_assignment": false,
+      "observable_state_matching_variables": true,
+      "randomized_C1_probe_sham": false,
+      "frozen_OOD_C2": false,
+      "eligible_role": "secondary OOD prediction benchmark only"
+    },
+    {
+      "name": "Bouc-Wen Hysteretic System",
+      "source": "https://www.nonlinearbenchmark.org/benchmarks/bouc-wen",
+      "real_world": false,
+      "observable_inputs_outputs": true,
+      "trajectory_level_holdout": true,
+      "ordered_history_assignment": false,
+      "observable_state_matching_variables": false,
+      "randomized_C1_probe_sham": false,
+      "frozen_OOD_C2": false,
+      "eligible_role": "history-dependence-without-reconstruction negative control"
+    },
+    {
+      "name": "Silverbox System",
+      "source": "https://www.nonlinearbenchmark.org/benchmarks/silverbox",
+      "real_world": true,
+      "observable_inputs_outputs": true,
+      "trajectory_level_holdout": true,
+      "ordered_history_assignment": false,
+      "observable_state_matching_variables": false,
+      "randomized_C1_probe_sham": false,
+      "frozen_OOD_C2": false,
+      "eligible_role": "nonlinear system-identification benchmark only"
+    }
+  ]
+}

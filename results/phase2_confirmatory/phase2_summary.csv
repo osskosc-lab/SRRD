@@ -1,0 +1,121 @@
+scenario,scenario_label,expected_role,metric,n,mean,ci_low,ci_high
+true_srrd_aligned,True SRRD / aligned observation,positive_control,loss_srrd_bilevel,400,0.543275522717,0.540836293575,0.545712089712
+true_srrd_aligned,True SRRD / aligned observation,positive_control,loss_strongest_baseline,400,0.507378528217,0.506015552427,0.508812360573
+true_srrd_aligned,True SRRD / aligned observation,positive_control,loss_flat_rnn_4x,400,0.515244159326,0.513715683134,0.516678440571
+true_srrd_aligned,True SRRD / aligned observation,positive_control,r_ood,400,1.07077802266,1.06701017578,1.07457636532
+true_srrd_aligned,True SRRD / aligned observation,positive_control,r_shuffle,400,6.56653840554,6.49658481846,6.63651432124
+true_srrd_aligned,True SRRD / aligned observation,positive_control,r_frozen,400,1.3154906694,1.30969695938,1.32125637363
+true_srrd_aligned,True SRRD / aligned observation,positive_control,srrd_vs_flat_rnn_4x,400,1.05450040979,1.05072917642,1.0585929102
+true_srrd_aligned,True SRRD / aligned observation,positive_control,psi_update,400,-0.861555580905,-0.865835437366,-0.857051483353
+true_srrd_aligned,True SRRD / aligned observation,positive_control,abs_psi_update,400,0.861555580905,0.857253926252,0.865926289538
+true_srrd_aligned,True SRRD / aligned observation,positive_control,kappa_obs,400,-0.358981492044,-0.360846596746,-0.357104305717
+true_srrd_aligned,True SRRD / aligned observation,positive_control,history_effect_sham,400,-1.07756029813,-1.08056889994,-1.0744421147
+true_srrd_aligned,True SRRD / aligned observation,positive_control,history_effect_probe,400,-1.93911587903,-1.94218596974,-1.93595508848
+true_srrd_aligned,True SRRD / aligned observation,positive_control,state_max_smd,400,0.010789156749,0.0104025224375,0.0111964109223
+true_srrd_aligned,True SRRD / aligned observation,positive_control,state_energy_distance,400,0.00312397361254,0.00310165838381,0.00314704056514
+true_srrd_aligned,True SRRD / aligned observation,positive_control,state_permutation_reject,400,0.085,0.0575,0.1125
+true_srrd_orthogonal,True SRRD / orthogonal observation,observation_boundary,loss_srrd_bilevel,400,0.542443063274,0.540080390447,0.544955563716
+true_srrd_orthogonal,True SRRD / orthogonal observation,observation_boundary,loss_strongest_baseline,400,0.496738661858,0.495392614834,0.498092015165
+true_srrd_orthogonal,True SRRD / orthogonal observation,observation_boundary,loss_flat_rnn_4x,400,0.514892053407,0.513419947513,0.516401716971
+true_srrd_orthogonal,True SRRD / orthogonal observation,observation_boundary,r_ood,400,1.09200261143,1.08809032053,1.09566496756
+true_srrd_orthogonal,True SRRD / orthogonal observation,observation_boundary,r_shuffle,400,1.01010005625,1.00887585801,1.01136609699
+true_srrd_orthogonal,True SRRD / orthogonal observation,observation_boundary,r_frozen,400,0.99915127371,0.998155733664,1.00011831877
+true_srrd_orthogonal,True SRRD / orthogonal observation,observation_boundary,srrd_vs_flat_rnn_4x,400,1.05360834937,1.04976534065,1.05749936148
+true_srrd_orthogonal,True SRRD / orthogonal observation,observation_boundary,psi_update,400,0.00115271202916,-0.00331830254423,0.00540989478738
+true_srrd_orthogonal,True SRRD / orthogonal observation,observation_boundary,abs_psi_update,400,0.0357961010834,0.0332677565696,0.0384433096239
+true_srrd_orthogonal,True SRRD / orthogonal observation,observation_boundary,kappa_obs,400,0.000480296678818,-0.00129588190041,0.00222864128085
+true_srrd_orthogonal,True SRRD / orthogonal observation,observation_boundary,history_effect_sham,400,0.00107981973677,-0.00189167401724,0.00415734227664
+true_srrd_orthogonal,True SRRD / orthogonal observation,observation_boundary,history_effect_probe,400,0.00223253176593,-0.000914827282406,0.00526336447063
+true_srrd_orthogonal,True SRRD / orthogonal observation,observation_boundary,state_max_smd,400,0.010789156749,0.0104018578162,0.0111929823221
+true_srrd_orthogonal,True SRRD / orthogonal observation,observation_boundary,state_energy_distance,400,0.00312397361254,0.00310071380333,0.0031464482873
+true_srrd_orthogonal,True SRRD / orthogonal observation,observation_boundary,state_permutation_reject,400,0.0725,0.0475,0.1
+frozen_rule,Frozen rule,negative_control,loss_srrd_bilevel,200,0.542745368914,0.539500762564,0.546096333035
+frozen_rule,Frozen rule,negative_control,loss_strongest_baseline,200,0.507312797091,0.505468248966,0.509169831223
+frozen_rule,Frozen rule,negative_control,loss_flat_rnn_4x,200,0.515493151931,0.513552997057,0.51747534181
+frozen_rule,Frozen rule,negative_control,r_ood,200,1.06984400956,1.06497799196,1.07497895041
+frozen_rule,Frozen rule,negative_control,r_shuffle,200,3.61389743045,3.57029747708,3.65761885696
+frozen_rule,Frozen rule,negative_control,r_frozen,200,1.00012199221,0.998802367217,1.00151716635
+frozen_rule,Frozen rule,negative_control,srrd_vs_flat_rnn_4x,200,1.05293518253,1.04793078969,1.05819574808
+frozen_rule,Frozen rule,negative_control,psi_update,200,-0.000569186871622,-0.00639031919151,0.00533963306349
+frozen_rule,Frozen rule,negative_control,abs_psi_update,200,0.0352010588943,0.0314787294623,0.0389231666897
+frozen_rule,Frozen rule,negative_control,kappa_obs,200,-0.000237161196509,-0.00272621337828,0.00233670032697
+frozen_rule,Frozen rule,negative_control,history_effect_sham,200,-1.07834455639,-1.08287712684,-1.07384012793
+frozen_rule,Frozen rule,negative_control,history_effect_probe,200,-1.07891374326,-1.08326179567,-1.07435574208
+frozen_rule,Frozen rule,negative_control,state_max_smd,200,0.0107634351582,0.0102116591238,0.0113510983126
+frozen_rule,Frozen rule,negative_control,state_energy_distance,200,0.00313328102048,0.00310363523667,0.00316375363321
+frozen_rule,Frozen rule,negative_control,state_permutation_reject,200,0.075,0.04,0.11
+order_invariant_memory,Order-invariant memory,negative_control,loss_srrd_bilevel,200,0.542414140072,0.539282499327,0.545691755431
+order_invariant_memory,Order-invariant memory,negative_control,loss_strongest_baseline,200,0.497554628661,0.495745553537,0.499367376236
+order_invariant_memory,Order-invariant memory,negative_control,loss_flat_rnn_4x,200,0.515382046269,0.513387178896,0.51736257599
+order_invariant_memory,Order-invariant memory,negative_control,r_ood,200,1.09014708248,1.08502406758,1.09520903454
+order_invariant_memory,Order-invariant memory,negative_control,r_shuffle,200,1.01203526234,1.01020828969,1.01383711869
+order_invariant_memory,Order-invariant memory,negative_control,r_frozen,200,0.999573743745,0.998249601376,1.0009373844
+order_invariant_memory,Order-invariant memory,negative_control,srrd_vs_flat_rnn_4x,200,1.05252153367,1.04751118664,1.05777287467
+order_invariant_memory,Order-invariant memory,negative_control,psi_update,200,-0.000840248688676,-0.00682610048512,0.00514801845662
+order_invariant_memory,Order-invariant memory,negative_control,abs_psi_update,200,0.035042868876,0.0314257010474,0.0387571277907
+order_invariant_memory,Order-invariant memory,negative_control,kappa_obs,200,-0.000350103620282,-0.00287915748321,0.00238226656212
+order_invariant_memory,Order-invariant memory,negative_control,history_effect_sham,200,0.000488098109641,-0.0038585092214,0.00489562874328
+order_invariant_memory,Order-invariant memory,negative_control,history_effect_probe,200,-0.000352150579034,-0.00476021558821,0.00408724240782
+order_invariant_memory,Order-invariant memory,negative_control,state_max_smd,200,0.0107634351582,0.0101801096254,0.0113540150015
+order_invariant_memory,Order-invariant memory,negative_control,state_energy_distance,200,0.00313328102048,0.00310223464628,0.00316503125876
+order_invariant_memory,Order-invariant memory,negative_control,state_permutation_reject,200,0.08,0.045,0.12
+flat_high_dim_markov,Flat high-dimensional Markov latent,capacity_control,loss_srrd_bilevel,400,0.828076734173,0.815718510951,0.840241837029
+flat_high_dim_markov,Flat high-dimensional Markov latent,capacity_control,loss_strongest_baseline,400,0.755389230757,0.746258618095,0.764462808674
+flat_high_dim_markov,Flat high-dimensional Markov latent,capacity_control,loss_flat_rnn_4x,400,0.86517098224,0.85456358277,0.875768690705
+flat_high_dim_markov,Flat high-dimensional Markov latent,capacity_control,r_ood,400,1.09604944005,1.08759642467,1.10489737272
+flat_high_dim_markov,Flat high-dimensional Markov latent,capacity_control,r_shuffle,400,1.01058271655,1.00903281743,1.01212298983
+flat_high_dim_markov,Flat high-dimensional Markov latent,capacity_control,r_frozen,400,0.998739486157,0.997709673029,0.999766137354
+flat_high_dim_markov,Flat high-dimensional Markov latent,capacity_control,srrd_vs_flat_rnn_4x,400,0.962336624617,0.950149589407,0.974742631525
+flat_high_dim_markov,Flat high-dimensional Markov latent,capacity_control,psi_update,400,0.00104659642847,-0.00318900395221,0.00553648630759
+flat_high_dim_markov,Flat high-dimensional Markov latent,capacity_control,abs_psi_update,400,0.0362224423244,0.0336669281929,0.038841713422
+flat_high_dim_markov,Flat high-dimensional Markov latent,capacity_control,kappa_obs,400,0.000436081845195,-0.00137092159314,0.00220929465589
+flat_high_dim_markov,Flat high-dimensional Markov latent,capacity_control,history_effect_sham,400,0.00114240172269,-0.00198337405993,0.00435558378068
+flat_high_dim_markov,Flat high-dimensional Markov latent,capacity_control,history_effect_probe,400,0.00218899815116,-0.00099680884449,0.00535153262575
+flat_high_dim_markov,Flat high-dimensional Markov latent,capacity_control,state_max_smd,400,0.010789156749,0.0104052741314,0.0111761578973
+flat_high_dim_markov,Flat high-dimensional Markov latent,capacity_control,state_energy_distance,400,0.00312397361254,0.00310172085194,0.00314677983315
+flat_high_dim_markov,Flat high-dimensional Markov latent,capacity_control,state_permutation_reject,400,0.08,0.055,0.1075
+persistent_history_no_update,Persistent history without second-order update,history_only_control,loss_srrd_bilevel,200,0.543285099553,0.540066009369,0.546757075343
+persistent_history_no_update,Persistent history without second-order update,history_only_control,loss_strongest_baseline,200,0.507365534758,0.505455689923,0.509265279801
+persistent_history_no_update,Persistent history without second-order update,history_only_control,loss_flat_rnn_4x,200,0.515363083703,0.513440563863,0.517321024787
+persistent_history_no_update,Persistent history without second-order update,history_only_control,r_ood,200,1.07080821923,1.06580599171,1.07604752279
+persistent_history_no_update,Persistent history without second-order update,history_only_control,r_shuffle,200,4.70916944836,4.65448590931,4.76612617622
+persistent_history_no_update,Persistent history without second-order update,history_only_control,r_frozen,200,1.00030003247,0.998971939627,1.00173654867
+persistent_history_no_update,Persistent history without second-order update,history_only_control,srrd_vs_flat_rnn_4x,200,1.0542551697,1.04903990644,1.05955900517
+persistent_history_no_update,Persistent history without second-order update,history_only_control,psi_update,200,-0.000866138650336,-0.00703491158563,0.00495445435267
+persistent_history_no_update,Persistent history without second-order update,history_only_control,abs_psi_update,200,0.035075819306,0.0314015243411,0.0386570515336
+persistent_history_no_update,Persistent history without second-order update,history_only_control,kappa_obs,200,-0.000360891104307,-0.00290633798354,0.00215336305315
+persistent_history_no_update,Persistent history without second-order update,history_only_control,history_effect_sham,200,-1.28319788174,-1.28782342312,-1.27870491415
+persistent_history_no_update,Persistent history without second-order update,history_only_control,history_effect_probe,200,-1.28406402039,-1.28860133022,-1.27973341279
+persistent_history_no_update,Persistent history without second-order update,history_only_control,state_max_smd,200,0.0107634351582,0.0102226046741,0.0113367720108
+persistent_history_no_update,Persistent history without second-order update,history_only_control,state_energy_distance,200,0.00313328102048,0.00310131901714,0.00316570420213
+persistent_history_no_update,Persistent history without second-order update,history_only_control,state_permutation_reject,200,0.1,0.06,0.145
+residual_state_imbalance,Residual observable-state imbalance,matching_confound,loss_srrd_bilevel,400,0.542031352825,0.539639664409,0.544501085105
+residual_state_imbalance,Residual observable-state imbalance,matching_confound,loss_strongest_baseline,400,0.496749006759,0.495443168155,0.498094855364
+residual_state_imbalance,Residual observable-state imbalance,matching_confound,loss_flat_rnn_4x,400,0.514897913349,0.513430359246,0.516430088463
+residual_state_imbalance,Residual observable-state imbalance,matching_confound,r_ood,400,1.09114699859,1.08745904544,1.09492020963
+residual_state_imbalance,Residual observable-state imbalance,matching_confound,r_shuffle,400,1.0143007328,1.0128568578,1.01571504435
+residual_state_imbalance,Residual observable-state imbalance,matching_confound,r_frozen,400,0.999442804857,0.998442301771,1.00041481972
+residual_state_imbalance,Residual observable-state imbalance,matching_confound,srrd_vs_flat_rnn_4x,400,1.05278870193,1.04918801404,1.05653011533
+residual_state_imbalance,Residual observable-state imbalance,matching_confound,psi_update,400,0.00115271202916,-0.00326646426541,0.00560165559278
+residual_state_imbalance,Residual observable-state imbalance,matching_confound,abs_psi_update,400,0.0357961010834,0.0332558430603,0.0383258976003
+residual_state_imbalance,Residual observable-state imbalance,matching_confound,kappa_obs,400,0.000480296678818,-0.00132161362524,0.00231142179802
+residual_state_imbalance,Residual observable-state imbalance,matching_confound,history_effect_sham,400,0.080357617472,0.0772252570406,0.0835228528445
+residual_state_imbalance,Residual observable-state imbalance,matching_confound,history_effect_probe,400,0.0815103295012,0.0784886139157,0.0846520384513
+residual_state_imbalance,Residual observable-state imbalance,matching_confound,state_max_smd,400,0.482230666579,0.476678697544,0.487780162378
+residual_state_imbalance,Residual observable-state imbalance,matching_confound,state_energy_distance,400,0.0904155301013,0.0884890462424,0.0923206475339
+residual_state_imbalance,Residual observable-state imbalance,matching_confound,state_permutation_reject,400,1,1,1
+pure_null,Pure null,negative_control,loss_srrd_bilevel,200,0.542389214257,0.539322263337,0.545555943914
+pure_null,Pure null,negative_control,loss_strongest_baseline,200,0.497422863229,0.495572879267,0.499193219003
+pure_null,Pure null,negative_control,loss_flat_rnn_4x,200,0.515364092166,0.513429480155,0.517371471989
+pure_null,Pure null,negative_control,r_ood,200,1.09038741332,1.08544372124,1.0958417776
+pure_null,Pure null,negative_control,r_shuffle,200,1.01042472254,1.00856087539,1.01229162389
+pure_null,Pure null,negative_control,r_frozen,200,0.999564288349,0.998249301728,1.00086520412
+pure_null,Pure null,negative_control,srrd_vs_flat_rnn_4x,200,1.05251085672,1.04741398716,1.05762168631
+pure_null,Pure null,negative_control,psi_update,200,-0.000866138650336,-0.00697965454575,0.00502110563147
+pure_null,Pure null,negative_control,abs_psi_update,200,0.035075819306,0.0314465209483,0.0388213062811
+pure_null,Pure null,negative_control,kappa_obs,200,-0.000360891104307,-0.00288742100638,0.00213896466208
+pure_null,Pure null,negative_control,history_effect_sham,200,0.000502118259136,-0.00406606006209,0.00495823044974
+pure_null,Pure null,negative_control,history_effect_probe,200,-0.0003640203912,-0.00465209860057,0.00403317968433
+pure_null,Pure null,negative_control,state_max_smd,200,0.0107634351582,0.010175414249,0.0113683330467
+pure_null,Pure null,negative_control,state_energy_distance,200,0.00313328102048,0.00310214477628,0.00316367189512
+pure_null,Pure null,negative_control,state_permutation_reject,200,0.075,0.04,0.115

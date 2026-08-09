@@ -1,0 +1,40 @@
+{
+  "all_checks_pass": true,
+  "checks": {
+    "preregistration_hash_matches_freeze": true,
+    "preregistration_hash_matches_run_metadata": true,
+    "all_ratio_recomputations_within_1e-10": true,
+    "composite_seed_ids_unique": true,
+    "nominal_feature_budgets_equal": true,
+    "four_x_feature_budget_exact": true,
+    "forbidden_model_inputs_recorded": true,
+    "external_candidates_not_misclassified_as_confirmatory": true,
+    "independent_gate_recalculation_matches": true,
+    "classification_is_C": true
+  },
+  "ratio_max_absolute_errors": {
+    "strongest_baseline": 0.0,
+    "r_ood": 1.006972283335017e-11,
+    "r_shuffle": 1.6970425065210293e-11,
+    "r_frozen": 9.503731135396265e-12,
+    "srrd_vs_flat_rnn_4x": 6.867173496516443e-12
+  },
+  "independent_gates": {
+    "G0_data_integrity": true,
+    "G1_observable_state_equivalence": true,
+    "G2_positive_control_detectability": true,
+    "G3_negative_control_specificity": true,
+    "G4_OOD_superiority": false,
+    "G5_order_necessity": true,
+    "G6_reconstruction_necessity": true,
+    "G7_update_interaction": true,
+    "G8_capacity_robustness": false,
+    "G9_residual_imbalance_robustness": true,
+    "G10_observation_boundary": true
+  },
+  "recorded_classification": "C_history_survives_SRRD_decomposition_does_not",
+  "rotation_spearman": {
+    "coupling_vs_abs_psi": 1.0,
+    "coupling_vs_abs_kappa": 1.0
+  }
+}

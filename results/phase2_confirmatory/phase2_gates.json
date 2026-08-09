@@ -1,0 +1,22 @@
+{
+  "all_gates_pass": false,
+  "gates": {
+    "G0_data_integrity": true,
+    "G1_observable_state_equivalence": true,
+    "G2_positive_control_detectability": true,
+    "G3_negative_control_specificity": true,
+    "G4_OOD_superiority": false,
+    "G5_order_necessity": true,
+    "G6_reconstruction_necessity": true,
+    "G7_update_interaction": true,
+    "G8_capacity_robustness": false,
+    "G9_residual_imbalance_robustness": true,
+    "G10_observation_boundary": true
+  },
+  "classification": "C_history_survives_SRRD_decomposition_does_not",
+  "rotation_diagnostics": {
+    "spearman_cosine_vs_abs_psi": 1.0,
+    "spearman_cosine_vs_abs_kappa": 1.0
+  },
+  "interpretation": "Operational identification requires both mechanism-sensitive ablations and a >=10% held-out OOD advantage over every strong baseline."
+}

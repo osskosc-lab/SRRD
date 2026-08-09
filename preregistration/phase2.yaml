@@ -1,0 +1,109 @@
+study:
+  id: SRRD-P2-BLACKBOX-2026-08-09
+  title: Black-Box Operational Identifiability Falsification
+  status: frozen-before-confirmatory-run
+  scope: Phase 2A-2C synthetic latent-blind benchmark
+  primary_claim: >-
+    After observable-state equivalence, history-dependent rule reconstruction
+    provides OOD predictive information that cannot be reproduced by
+    equivalent-capacity flat latent-state, predictive-state, or history-control models.
+
+claims_not_tested:
+  - recovery of the true latent rule
+  - unique ontology of self
+  - existence of SRRD in biological or deployed systems
+
+allowed_model_inputs: [history, x_obs, c1, u2]
+forbidden_model_inputs:
+  - true_rule
+  - latent_rule
+  - slow_state
+  - scenario_mechanism
+
+design:
+  histories:
+    H1: [A, A, A, A, A, A, B, B, B, B, B, B, C, C, C, C]
+    H2: [B, B, B, B, B, B, A, A, A, A, A, A, C, C, C, C]
+  state_matching:
+    exact_reset_prohibited: true
+    observable_vector: [y_t, y_t_minus_1, delta_y, u_t, observable_covariate]
+    paired_design_with_nonzero_measurement_noise: true
+    max_smd_margin: 0.10
+    energy_distance_margin: 0.10
+    paired_sign_flip_permutations: 199
+    maximum_false_rejection_rate: 0.10
+  interventions:
+    C1: [sham, probe]
+    train_C2: [-0.8, -0.4, 0.4, 0.8]
+    frozen_OOD_C2: 1.2
+    OOD_used_for_tuning: false
+  primary_endpoint: multi-horizon standardized Gaussian NLL
+  sigma_floor: 0.50
+
+models:
+  nominal_feature_budget: 24
+  common_training_samples: 192
+  common_test_samples: 160
+  common_ridge_penalty: 1.0
+  baselines:
+    - Markov-SSM
+    - fixed-core flat recurrent model with trained readout
+    - Adaptive-PSR feature model
+    - History-MPC lifted ARX predictor
+  target: SRRD-Bilevel
+  capacity_ladder: [0.5, 1, 2, 4]
+  capacity_note: >-
+    The recurrent core and feature maps are fixed; trainable readout coefficient
+    counts are matched at 1x and expanded at 2x and 4x. This is a screening
+    implementation, not a trained GRU/LSTM equivalence theorem.
+
+generators:
+  - true_srrd_aligned
+  - true_srrd_orthogonal
+  - frozen_rule
+  - order_invariant_memory
+  - flat_high_dim_markov
+  - persistent_history_no_update
+  - residual_state_imbalance
+  - pure_null
+
+sampling:
+  base_seeds_per_scenario: 200
+  confirmation_seeds_total:
+    true_srrd_aligned: 400
+    true_srrd_orthogonal: 400
+    flat_high_dim_markov: 400
+    residual_state_imbalance: 400
+  seed_level_paired_bootstrap_replicates: 4000
+  observation_rotation_angles_degrees: [0, 15, 30, 45, 60, 75, 90]
+  rotation_seeds_per_angle: 80
+  common_random_numbers_across_scenarios: true
+  master_seed: 20260809
+
+estimands:
+  R_OOD: loss_SRRD / minimum_loss_across_all_baselines
+  R_shuffle: loss_SRRD_with_order_shuffled / loss_SRRD
+  R_frozen: loss_SRRD_with_slow_update_frozen / loss_SRRD
+  psi_update: (mu_H1_probe - mu_H1_sham) - (mu_H2_probe - mu_H2_sham)
+  kappa_obs: slope_of_mean_future_response_on_history_x_probe_x_C2
+
+thresholds:
+  OOD_superiority_upper_CI: 0.90
+  shuffle_necessity_lower_CI: 1.10
+  frozen_necessity_lower_CI: 1.10
+  update_minimum_effect_lower_CI: 0.20
+  negative_update_equivalence_margin: 0.10
+  observation_zero_margin: 0.10
+
+decision_classes:
+  A: operationally_identified
+  B: conditionally_identified
+  C: history_survives_SRRD_decomposition_does_not
+  D: mechanism_falsified
+  E: unidentifiable
+  F: implementation_failure
+
+external_phase2d_rule: >-
+  No public external dataset is confirmatory unless history order, observable
+  matching variables, randomized C1 probe/sham, frozen OOD C2, and outcomes are
+  all fixed before outcome inspection. Benchmark suitability alone is not evidence.

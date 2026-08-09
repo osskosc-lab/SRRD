@@ -1,0 +1,59 @@
+{
+  "study_id": "SRRD-P2-BLACKBOX-2026-08-09",
+  "generated_at": "2026-08-09T11:22:05.697274+00:00",
+  "config": {
+    "base_seeds": 200,
+    "confirmation_seeds": 400,
+    "confirmation_scenarios": [
+      "true_srrd_aligned",
+      "true_srrd_orthogonal",
+      "flat_high_dim_markov",
+      "residual_state_imbalance"
+    ],
+    "n_train": 192,
+    "n_test": 160,
+    "horizon": 6,
+    "nominal_feature_budget": 24,
+    "ridge": 1.0,
+    "sigma_floor": 0.5,
+    "state_permutations": 199,
+    "bootstrap_replicates": 4000,
+    "rotation_seeds": 80,
+    "rotation_angles": [
+      0,
+      15,
+      30,
+      45,
+      60,
+      75,
+      90
+    ],
+    "state_smd_margin": 0.1,
+    "state_energy_margin": 0.1,
+    "state_reject_rate_max": 0.1,
+    "ood_ratio_threshold": 0.9,
+    "shuffle_ratio_threshold": 1.1,
+    "frozen_ratio_threshold": 1.1,
+    "update_min_effect": 0.2,
+    "negative_update_margin": 0.1,
+    "observation_zero_margin": 0.1,
+    "master_seed": 20260809
+  },
+  "preregistration_path": "preregistration/phase2.yaml",
+  "preregistration_sha256": "2a5016997d7c6dac04517c9e1568af13ea2e9413f35139cd1d2e957fdb728f05",
+  "model_input_contract": [
+    "history",
+    "x_obs",
+    "c1",
+    "u2"
+  ],
+  "forbidden_model_inputs": [
+    "true_rule",
+    "latent_rule",
+    "slow_state",
+    "scenario_mechanism"
+  ],
+  "common_random_numbers_across_scenarios": true,
+  "n_seed_runs": 2400,
+  "n_rotation_runs": 560
+}

@@ -1,0 +1,9 @@
+{
+  "correction": "G1 permutation false-rejection ceiling evaluated on point rate rather than its bootstrap upper bound",
+  "reason": "preregistration/phase2.yaml fixes maximum_false_rejection_rate at 0.10 but does not define an upper-CI rule for that diagnostic; SMD and energy-distance margins remain upper-CI gates",
+  "threshold_changed": false,
+  "data_changed": false,
+  "models_refit": false,
+  "observed_point_rate": 0.085,
+  "previously_misapplied_bootstrap_upper_bound": 0.1125
+}

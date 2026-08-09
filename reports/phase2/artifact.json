@@ -1,0 +1,841 @@
+{
+  "surface": "report",
+  "manifest": {
+    "version": 1,
+    "surface": "report",
+    "title": "SRRD Phase 2: Black-Box Operational Identifiability Falsification",
+    "description": "Latent-rule-blind confirmatory simulation with state matching, randomized probes, OOD intervention, ablations, and capacity attacks.",
+    "generatedAt": "2026-08-09T11:22:05.697274+00:00",
+    "sources": [
+      {
+        "id": "phase2-summary",
+        "label": "Phase 2 confirmatory bootstrap summary",
+        "path": "results/phase2_confirmatory/phase2_summary.csv",
+        "query": {
+          "engine": "Python/pandas",
+          "language": "sql",
+          "sql": "SELECT * FROM read_csv_auto('results/phase2_confirmatory/phase2_summary.csv') ORDER BY scenario, metric;",
+          "description": "Eight generator scenarios; paired seed-level estimates and 95% percentile-bootstrap intervals.",
+          "executed_at": "2026-08-09T11:22:05.697274+00:00",
+          "tables_used": [
+            "phase2_summary.csv",
+            "phase2_seed_metrics.csv.gz"
+          ],
+          "filters": [
+            "2,400 scenario-seed runs",
+            "4,000 bootstrap resamples",
+            "OOD C2=1.2 held out until final evaluation"
+          ],
+          "metric_definitions": [
+            "R_OOD = SRRD OOD NLL / strongest baseline OOD NLL.",
+            "R_shuffle = shuffled-history SRRD NLL / intact-history SRRD NLL.",
+            "R_frozen = frozen-update SRRD NLL / intact-update SRRD NLL.",
+            "psi_update = History × randomized C1 probe interaction on the future response."
+          ]
+        }
+      },
+      {
+        "id": "phase2-rotation",
+        "label": "Phase 2 observation-coupling sweep",
+        "path": "results/phase2_confirmatory/phase2_rotation_summary.csv",
+        "query": {
+          "engine": "Python/pandas",
+          "language": "sql",
+          "sql": "SELECT * FROM read_csv_auto('results/phase2_confirmatory/phase2_rotation_summary.csv') ORDER BY angle_degrees, metric;",
+          "description": "Seven preregistered observation rotations, 80 seeds per angle, with 95% bootstrap intervals.",
+          "executed_at": "2026-08-09T11:22:05.697274+00:00"
+        }
+      },
+      {
+        "id": "phase2-prereg",
+        "label": "Frozen Phase 2 preregistration",
+        "path": "preregistration/phase2.yaml",
+        "query": {
+          "description": "Claim, generators, model budgets, interventions, thresholds, and six-class decision rule frozen before the confirmatory run.",
+          "executed_at": "2026-08-09T11:20:07Z"
+        }
+      },
+      {
+        "id": "phase2-gates",
+        "label": "Phase 2 gate decisions",
+        "path": "results/phase2_confirmatory/phase2_gates.json",
+        "query": {
+          "engine": "Python/json",
+          "language": "sql",
+          "sql": "SELECT * FROM read_json_auto('results/phase2_confirmatory/phase2_gates.json');",
+          "description": "Recorded outcomes for preregistered gates G0 through G10 and the six-class final decision.",
+          "executed_at": "2026-08-09T11:22:05.697274+00:00"
+        }
+      },
+      {
+        "id": "phase2-validator",
+        "label": "Independent Phase 2 validation receipt",
+        "path": "results/phase2_confirmatory/phase2_validation.json",
+        "query": {
+          "description": "Independent recomputation of hashes, ratios, model budgets, forbidden inputs, gates, and final classification.",
+          "executed_at": "2026-08-09T11:22:05.697274+00:00"
+        }
+      },
+      {
+        "id": "external-audit",
+        "label": "Phase 2D external-dataset eligibility audit",
+        "path": "external/phase2d_eligibility.json",
+        "query": {
+          "description": "Pre-outcome audit of Nano-drone, Bouc-Wen, and Silverbox against the confirmatory Phase 2D design requirements.",
+          "executed_at": "2026-08-09"
+        }
+      },
+      {
+        "id": "phase1-report",
+        "label": "SRRD Phase 1 falsification report",
+        "path": "project_sources/02-SRRD_Phase1_Falsification_Report_2026-08-09-1-.pdf",
+        "query": {
+          "description": "User-provided Phase 1 report establishing SRRD/CVP separation and motivating the black-box test."
+        }
+      },
+      {
+        "id": "theory-audit",
+        "label": "SRRD theory audit and reconstruction report",
+        "path": "project_sources/01-SRRD-.pdf",
+        "query": {
+          "description": "User-provided audit defining state matching, rule-update interventions, and equivalent-capacity attacks."
+        }
+      }
+    ],
+    "blocks": [
+      {
+        "id": "title",
+        "type": "markdown",
+        "body": "# SRRD Phase 2: Black-Box Operational Identifiability Falsification\n\n**結果報告書 · 2026-08-09**"
+      },
+      {
+        "id": "technical-summary",
+        "type": "markdown",
+        "sourceId": "phase2-summary",
+        "body": "## 技術要約\n\n最終判定は **C — history dependence survives, SRRD decomposition does not** である。true-SRRD/aligned generator では履歴順序と slow-update の必要性、History × probe の相互作用、観測結合境界はいずれも検出された。しかし主評価の `R_OOD` は 1.0708 （95% CI 1.0670–1.0746）で、事前規定した 0.90 以下に届かず、SRRD-Bilevel は最強 baseline より約 7.1% 高損失だった。4× flat RNN にも負けたため、履歴依存的な生成現象は支持されても、その予測に fast state + slow reconstructive state 分解が固有に必要だとは言えない。"
+      },
+      {
+        "id": "headline-strip",
+        "type": "metric-strip",
+        "cardIds": [
+          "card-ood",
+          "card-shuffle",
+          "card-frozen",
+          "card-update"
+        ]
+      },
+      {
+        "id": "decision",
+        "type": "markdown",
+        "sourceId": "phase2-prereg",
+        "body": "## 事前登録された中心命題は生存しなかった\n\n中心命題は、観測状態を等価化した後でも、SRRD 型再構成が同等以上の容量を持つ flat latent-state、predictive-state、history-control model では再現できない OOD 予測情報を与える、というものだった。G4（OOD superiority）と G8（capacity robustness）が不通過であるため、**operationally identified** とは判定しない。これは履歴効果そのものの否定ではなく、SRRD 分解の予測上の固有性の反証である。"
+      },
+      {
+        "id": "model-loss-chart-block",
+        "type": "chart",
+        "chartId": "model-loss-chart"
+      },
+      {
+        "id": "model-table-block",
+        "type": "table",
+        "tableId": "model-table"
+      },
+      {
+        "id": "mechanism-separation",
+        "type": "markdown",
+        "sourceId": "phase2-summary",
+        "body": "## 機構感度は陽性、固有予測価値は陰性\n\n履歴順序を破壊すると損失は 6.57 倍、slow update を凍結すると 1.32 倍になり、`|psi_update|` は 0.8616（95% CI 0.8573–0.8659）だった。したがって被検 SRRD モデルが順序構造と更新項を実際に利用していたことは確認できる。同時に、より単純な flat recurrent predictive state が OOD 予測を上回った。この組合せが分類 C の核心である。"
+      },
+      {
+        "id": "control-table-block",
+        "type": "table",
+        "tableId": "control-table"
+      },
+      {
+        "id": "observation-boundary",
+        "type": "markdown",
+        "sourceId": "phase2-rotation",
+        "body": "## 観測結合境界はブラックボックス条件でも再現\n\n観測 probe を 0° から 90° へ回転すると、結合 cosine の低下に伴って `|psi_update|` と `|kappa_obs|` は単調に消失した。両者と coupling の Spearman ρ は 1.00。90° では `|psi_update|=0.0328`、`R_shuffle=1.0114` まで縮小した。よって **SRRD exists ⇒ always observable** は Phase 2 でも成立しない。"
+      },
+      {
+        "id": "rotation-chart-block",
+        "type": "chart",
+        "chartId": "rotation-chart"
+      },
+      {
+        "id": "state-matching",
+        "type": "markdown",
+        "sourceId": "phase2-summary",
+        "body": "## State-matching gate\n\naligned generator の最大 SMD は 0.0108（UCI 0.0112）、energy distance は 0.0031（UCI 0.0031）、paired permutation の棄却率は 0.085 で、事前閾値 0.10 を満たした。一方、residual-imbalance confound は SMD 0.4822、棄却率 1.00 と明確に検出された。Gate 1 の棄却率は preregistration が point-rate 上限を規定していたため point rate で判定した。初期 evaluator が bootstrap UCI を誤って適用した点は修正ログへ残し、閾値・データ・モデルを変えずに全実験を決定論的再実行した。"
+      },
+      {
+        "id": "gate-table-block",
+        "type": "table",
+        "tableId": "gate-table"
+      },
+      {
+        "id": "scope-method",
+        "type": "markdown",
+        "sourceId": "phase2-prereg",
+        "body": "## 範囲・データ・方法\n\n評価モデルが受け取るのは `history, x_obs, c1, u2` のみで、true rule、latent rule、slow state、scenario mechanism は禁止した。H1=A⁶B⁶C⁴ と H2=B⁶A⁶C⁴ は同じ回数と共通 suffix を持つ。C1 は probe/sham を無作為化し、学習 C2 は {-0.8,-0.4,0.4,0.8}、OOD C2=1.2 は model selection・early stopping・tuning から完全 hold-out した。8 generator × 計 2,400 scenario-seed runs、観測回転 560 runs、seed-level paired bootstrap 4,000 回である。Primary loss は 6 horizon の standardized Gaussian NLL。nominal 1× models は 24 features / 156 trainable readout parameters に揃えた。"
+      },
+      {
+        "id": "validation",
+        "type": "markdown",
+        "sourceId": "phase2-validator",
+        "body": "## 独立検証\n\n別 validator が preregistration SHA-256、seed ID 一意性、OOD contamination、全 ratio、nominal/4× budget、禁止入力、11 gates、最終分類を再計算し、全検査に合格した。最大 ratio 再計算誤差は 1.70e-11。凍結 preregistration hash は `2a5016997d7c6dac04517c9e1568af13ea2e9413f35139cd1d2e957fdb728f05` である。"
+      },
+      {
+        "id": "external-data",
+        "type": "markdown",
+        "sourceId": "external-audit",
+        "body": "## 外部データ監査：Phase 2D は未実施\n\n公開データを確認したが、履歴順序割付、観測 state matching 変数、randomized C1 probe/sham、frozen OOD C2、post-intervention outcome を同時に満たす confirmatory dataset は見つからなかった。[Nano-drone benchmark](https://arxiv.org/abs/2512.14450) は実世界の多入出力 OOD trajectory benchmark として二次評価に適するが、history randomization と C1/sham がない。[Bouc-Wen](https://www.nonlinearbenchmark.org/benchmarks/bouc-wen) は hysteresis を持つため history-without-reconstruction の負例候補、[Silverbox](https://www.nonlinearbenchmark.org/benchmarks/silverbox) は非線形 system identification の二次 benchmark 候補である。したがって外部データは参照・適格性監査に使い、Phase 2D 再現と誤表示しない。"
+      },
+      {
+        "id": "limitations",
+        "type": "markdown",
+        "body": "## 限界と反証範囲\n\n本結果は synthetic latent-blind screening であり、実世界の SRRD 不在を示さない。flat recurrent model は固定 reservoir core + 学習 readout で、完全学習 GRU/LSTM ではない。Adaptive PSR と History-MPC も feature baseline であり、理論上の完全実装ではない。それでも SRRD がこれらより優位でなかった事実は、現実装に有利な解釈を与えても中心命題を救わない。また真の `r_t` はモデルへ隠したが generator 設計は人工的であり、latent parameter identifiability や unique ontology of self は検証対象外である。"
+      },
+      {
+        "id": "next-steps",
+        "type": "markdown",
+        "body": "## 次の決定点\n\n1. Phase 2B-hard として、end-to-end 学習 GRU/LSTM、learned PSR、実制御 History-MPC を nested tuning budget 付きで再実装する。\n2. SRRD 側にも同じ optimization budget と calibration protocol を適用し、capacity ではなく分解の inductive bias を比較する。\n3. Phase 2D は既存データへの後付け適用ではなく、history order と C1/sham を事前無作為化できる外部実験として設計する。\n4. 現時点の科学的表現は『history matters; SRRD is not uniquely required』に固定する。"
+      }
+    ],
+    "cards": [
+      {
+        "id": "card-ood",
+        "description": "SRRD NLL / strongest baseline NLL。0.90 以下が支持条件。",
+        "dataset": "headline",
+        "sourceId": "phase2-summary",
+        "metrics": [
+          {
+            "label": "R_OOD",
+            "field": "r_ood",
+            "format": "number"
+          }
+        ]
+      },
+      {
+        "id": "card-shuffle",
+        "description": "履歴順序を破壊したときの損失比。1.10 以上が必要。",
+        "dataset": "headline",
+        "sourceId": "phase2-summary",
+        "metrics": [
+          {
+            "label": "R_shuffle",
+            "field": "r_shuffle",
+            "format": "number"
+          }
+        ]
+      },
+      {
+        "id": "card-frozen",
+        "description": "slow update を凍結したときの損失比。1.10 以上が必要。",
+        "dataset": "headline",
+        "sourceId": "phase2-summary",
+        "metrics": [
+          {
+            "label": "R_frozen",
+            "field": "r_frozen",
+            "format": "number"
+          }
+        ]
+      },
+      {
+        "id": "card-update",
+        "description": "History × randomized probe interaction の絶対値。",
+        "dataset": "headline",
+        "sourceId": "phase2-summary",
+        "metrics": [
+          {
+            "label": "|ψ_update|",
+            "field": "abs_psi_update",
+            "format": "number"
+          }
+        ]
+      }
+    ],
+    "charts": [
+      {
+        "id": "model-loss-chart",
+        "title": "Aligned generator: competitive models' held-out OOD loss",
+        "subtitle": "Lower is better. Same 1× budget: 24 features / 156 trained readout parameters; 2× and 4× are capacity attacks.",
+        "type": "bar",
+        "dataset": "chart_models",
+        "sourceId": "phase2-summary",
+        "encodings": {
+          "x": {
+            "field": "model",
+            "type": "nominal",
+            "label": "Model"
+          },
+          "y": {
+            "field": "ood_nll",
+            "type": "quantitative",
+            "label": "OOD standardized NLL"
+          },
+          "color": {
+            "field": "model",
+            "type": "nominal",
+            "label": "Model"
+          },
+          "tooltip": [
+            {
+              "field": "relative_to_best",
+              "type": "quantitative",
+              "label": "Relative to strongest"
+            },
+            {
+              "field": "feature_dim",
+              "type": "quantitative",
+              "label": "Features"
+            },
+            {
+              "field": "trainable_parameters",
+              "type": "quantitative",
+              "label": "Trained parameters"
+            }
+          ]
+        },
+        "layout": "full",
+        "maxRows": 20
+      },
+      {
+        "id": "rotation-chart",
+        "title": "Observable update signature vanishes as probe coupling is rotated away",
+        "subtitle": "80 seeds per angle; line shows mean |ψ_update|. The source table retains bootstrap intervals and adjacent diagnostics.",
+        "type": "line",
+        "dataset": "rotation",
+        "sourceId": "phase2-rotation",
+        "encodings": {
+          "x": {
+            "field": "angle_degrees",
+            "type": "quantitative",
+            "label": "Probe rotation (degrees)"
+          },
+          "y": {
+            "field": "abs_psi_update",
+            "type": "quantitative",
+            "label": "|ψ_update|"
+          },
+          "tooltip": [
+            {
+              "field": "coupling_cosine",
+              "type": "quantitative",
+              "label": "Observation coupling"
+            },
+            {
+              "field": "psi_ci_low",
+              "type": "quantitative",
+              "label": "95% CI low"
+            },
+            {
+              "field": "psi_ci_high",
+              "type": "quantitative",
+              "label": "95% CI high"
+            },
+            {
+              "field": "r_shuffle",
+              "type": "quantitative",
+              "label": "R_shuffle"
+            }
+          ]
+        },
+        "layout": "full",
+        "maxRows": 20
+      }
+    ],
+    "tables": [
+      {
+        "id": "model-table",
+        "title": "Full aligned-generator model competition",
+        "subtitle": "Mean OOD standardized NLL over 400 paired seeds; lower is better.",
+        "dataset": "models",
+        "sourceId": "phase2-summary",
+        "defaultSort": {
+          "field": "rank",
+          "direction": "asc"
+        },
+        "density": "dense",
+        "layout": "full",
+        "columns": [
+          {
+            "field": "rank",
+            "label": "Rank",
+            "format": "number"
+          },
+          {
+            "field": "model",
+            "label": "Model",
+            "type": "text"
+          },
+          {
+            "field": "family",
+            "label": "Family",
+            "type": "text"
+          },
+          {
+            "field": "ood_nll",
+            "label": "OOD NLL",
+            "format": "number"
+          },
+          {
+            "field": "relative_to_best",
+            "label": "vs best",
+            "format": "number"
+          },
+          {
+            "field": "feature_dim",
+            "label": "Features",
+            "format": "number"
+          },
+          {
+            "field": "trainable_parameters",
+            "label": "Trained params",
+            "format": "number"
+          }
+        ]
+      },
+      {
+        "id": "control-table",
+        "title": "Generator specificity and confound diagnostics",
+        "subtitle": "Means across 200 or 400 seeds. Aligned is the positive control; pure null, frozen, and order-invariant scenarios test specificity.",
+        "dataset": "controls",
+        "sourceId": "phase2-summary",
+        "density": "dense",
+        "layout": "full",
+        "columns": [
+          {
+            "field": "scenario_short",
+            "label": "Generator",
+            "type": "text"
+          },
+          {
+            "field": "abs_psi_update",
+            "label": "|ψ|",
+            "format": "number"
+          },
+          {
+            "field": "r_shuffle",
+            "label": "R_shuffle",
+            "format": "number"
+          },
+          {
+            "field": "r_frozen",
+            "label": "R_frozen",
+            "format": "number"
+          },
+          {
+            "field": "state_max_smd",
+            "label": "Max SMD",
+            "format": "number"
+          }
+        ]
+      },
+      {
+        "id": "gate-table",
+        "title": "Preregistered Phase 2 gates",
+        "subtitle": "Nine gates passed; the two gates required for unique OOD value (G4 and G8) failed.",
+        "dataset": "gates",
+        "sourceId": "phase2-gates",
+        "density": "dense",
+        "layout": "full",
+        "columns": [
+          {
+            "field": "gate",
+            "label": "Gate",
+            "type": "text"
+          },
+          {
+            "field": "test",
+            "label": "Test",
+            "type": "text"
+          },
+          {
+            "field": "criterion",
+            "label": "Criterion",
+            "type": "text"
+          },
+          {
+            "field": "evidence",
+            "label": "Observed",
+            "type": "text"
+          },
+          {
+            "field": "status",
+            "label": "Result",
+            "type": "text"
+          }
+        ]
+      }
+    ]
+  },
+  "snapshot": {
+    "version": 1,
+    "generatedAt": "2026-08-09T11:22:05.697274+00:00",
+    "status": "ready",
+    "datasets": {
+      "headline": [
+        {
+          "r_ood": 1.07077802266,
+          "r_shuffle": 6.56653840554,
+          "r_frozen": 1.3154906694,
+          "abs_psi_update": 0.861555580905
+        }
+      ],
+      "models": [
+        {
+          "model": "Flat RNN 2×",
+          "family": "flat_recurrent",
+          "ood_nll": 0.5074676425881275,
+          "relative_to_best": 1.0001756368583394,
+          "feature_dim": 48,
+          "trainable_parameters": 300,
+          "rank": 1
+        },
+        {
+          "model": "Flat RNN 4×",
+          "family": "flat_recurrent",
+          "ood_nll": 0.515244159326045,
+          "relative_to_best": 1.015502491081435,
+          "feature_dim": 96,
+          "trainable_parameters": 588,
+          "rank": 2
+        },
+        {
+          "model": "Flat RNN 1×",
+          "family": "flat_recurrent",
+          "ood_nll": 0.51679791545517,
+          "relative_to_best": 1.0185648124898394,
+          "feature_dim": 24,
+          "trainable_parameters": 156,
+          "rank": 3
+        },
+        {
+          "model": "SRRD-Bilevel",
+          "family": "bilevel_reconstruction",
+          "ood_nll": 0.543275522716695,
+          "relative_to_best": 1.070749928313617,
+          "feature_dim": 24,
+          "trainable_parameters": 156,
+          "rank": 4
+        },
+        {
+          "model": "Flat RNN 0.5×",
+          "family": "flat_recurrent",
+          "ood_nll": 0.9303215030567275,
+          "relative_to_best": 1.833584693316049,
+          "feature_dim": 12,
+          "trainable_parameters": 84,
+          "rank": 5
+        },
+        {
+          "model": "History-MPC",
+          "family": "history_control",
+          "ood_nll": 1.7211712961341248,
+          "relative_to_best": 3.392282488147584,
+          "feature_dim": 24,
+          "trainable_parameters": 156,
+          "rank": 6
+        },
+        {
+          "model": "Adaptive PSR",
+          "family": "predictive_state",
+          "ood_nll": 1.7281403862008,
+          "relative_to_best": 3.4060179729564495,
+          "feature_dim": 24,
+          "trainable_parameters": 156,
+          "rank": 7
+        },
+        {
+          "model": "Markov-SSM",
+          "family": "current_state",
+          "ood_nll": 1.784140238827,
+          "relative_to_best": 3.516388927799459,
+          "feature_dim": 24,
+          "trainable_parameters": 156,
+          "rank": 8
+        }
+      ],
+      "chart_models": [
+        {
+          "model": "Flat RNN 2×",
+          "family": "flat_recurrent",
+          "ood_nll": 0.5074676425881275,
+          "relative_to_best": 1.0001756368583394,
+          "feature_dim": 48,
+          "trainable_parameters": 300,
+          "rank": 1
+        },
+        {
+          "model": "Flat RNN 4×",
+          "family": "flat_recurrent",
+          "ood_nll": 0.515244159326045,
+          "relative_to_best": 1.015502491081435,
+          "feature_dim": 96,
+          "trainable_parameters": 588,
+          "rank": 2
+        },
+        {
+          "model": "Flat RNN 1×",
+          "family": "flat_recurrent",
+          "ood_nll": 0.51679791545517,
+          "relative_to_best": 1.0185648124898394,
+          "feature_dim": 24,
+          "trainable_parameters": 156,
+          "rank": 3
+        },
+        {
+          "model": "SRRD-Bilevel",
+          "family": "bilevel_reconstruction",
+          "ood_nll": 0.543275522716695,
+          "relative_to_best": 1.070749928313617,
+          "feature_dim": 24,
+          "trainable_parameters": 156,
+          "rank": 4
+        }
+      ],
+      "controls": [
+        {
+          "scenario": "True SRRD / aligned observation",
+          "scenario_short": "SRRD aligned",
+          "role": "positive_control",
+          "n": 400,
+          "abs_psi_update": 0.861555580905,
+          "r_shuffle": 6.56653840554,
+          "r_frozen": 1.3154906694,
+          "state_max_smd": 0.010789156749
+        },
+        {
+          "scenario": "True SRRD / orthogonal observation",
+          "scenario_short": "SRRD orthogonal",
+          "role": "observation_boundary",
+          "n": 400,
+          "abs_psi_update": 0.0357961010834,
+          "r_shuffle": 1.01010005625,
+          "r_frozen": 0.99915127371,
+          "state_max_smd": 0.010789156749
+        },
+        {
+          "scenario": "Frozen rule",
+          "scenario_short": "Frozen-rule",
+          "role": "negative_control",
+          "n": 200,
+          "abs_psi_update": 0.0352010588943,
+          "r_shuffle": 3.61389743045,
+          "r_frozen": 1.00012199221,
+          "state_max_smd": 0.0107634351582
+        },
+        {
+          "scenario": "Order-invariant memory",
+          "scenario_short": "Order-invariant",
+          "role": "negative_control",
+          "n": 200,
+          "abs_psi_update": 0.035042868876,
+          "r_shuffle": 1.01203526234,
+          "r_frozen": 0.999573743745,
+          "state_max_smd": 0.0107634351582
+        },
+        {
+          "scenario": "Flat high-dimensional Markov latent",
+          "scenario_short": "Flat Markov latent",
+          "role": "capacity_control",
+          "n": 400,
+          "abs_psi_update": 0.0362224423244,
+          "r_shuffle": 1.01058271655,
+          "r_frozen": 0.998739486157,
+          "state_max_smd": 0.010789156749
+        },
+        {
+          "scenario": "Persistent history without second-order update",
+          "scenario_short": "Persistent history-only",
+          "role": "history_only_control",
+          "n": 200,
+          "abs_psi_update": 0.035075819306,
+          "r_shuffle": 4.70916944836,
+          "r_frozen": 1.00030003247,
+          "state_max_smd": 0.0107634351582
+        },
+        {
+          "scenario": "Residual observable-state imbalance",
+          "scenario_short": "Residual imbalance",
+          "role": "matching_confound",
+          "n": 400,
+          "abs_psi_update": 0.0357961010834,
+          "r_shuffle": 1.0143007328,
+          "r_frozen": 0.999442804857,
+          "state_max_smd": 0.482230666579
+        },
+        {
+          "scenario": "Pure null",
+          "scenario_short": "Pure null",
+          "role": "negative_control",
+          "n": 200,
+          "abs_psi_update": 0.035075819306,
+          "r_shuffle": 1.01042472254,
+          "r_frozen": 0.999564288349,
+          "state_max_smd": 0.0107634351582
+        }
+      ],
+      "rotation": [
+        {
+          "angle_degrees": 0,
+          "coupling_cosine": 1.0,
+          "abs_psi_update": 0.863080610202,
+          "psi_ci_low": 0.854261958324,
+          "psi_ci_high": 0.871976103694,
+          "abs_kappa_obs": 0.359616920917,
+          "r_shuffle": 6.45075938652,
+          "srrd_vs_flat_rnn_4x": 1.0507860825,
+          "n": 80
+        },
+        {
+          "angle_degrees": 15,
+          "coupling_cosine": 0.965925826289,
+          "abs_psi_update": 0.833680099218,
+          "psi_ci_low": 0.824489359669,
+          "psi_ci_high": 0.8423378414,
+          "abs_kappa_obs": 0.347366708008,
+          "r_shuffle": 6.08904086441,
+          "srrd_vs_flat_rnn_4x": 1.05069718078,
+          "n": 80
+        },
+        {
+          "angle_degrees": 30,
+          "coupling_cosine": 0.866025403784,
+          "abs_psi_update": 0.747482162504,
+          "psi_ci_low": 0.73860951113,
+          "psi_ci_high": 0.756580887822,
+          "abs_kappa_obs": 0.311450901044,
+          "r_shuffle": 5.1031878532,
+          "srrd_vs_flat_rnn_4x": 1.05045558343,
+          "n": 80
+        },
+        {
+          "angle_degrees": 45,
+          "coupling_cosine": 0.707106781187,
+          "abs_psi_update": 0.610361046999,
+          "psi_ci_low": 0.601430134931,
+          "psi_ci_high": 0.619630503137,
+          "abs_kappa_obs": 0.254317102916,
+          "r_shuffle": 3.77532016295,
+          "srrd_vs_flat_rnn_4x": 1.05012983474,
+          "n": 80
+        },
+        {
+          "angle_degrees": 60,
+          "coupling_cosine": 0.5,
+          "abs_psi_update": 0.43166133012,
+          "psi_ci_low": 0.422674689367,
+          "psi_ci_high": 0.440044650963,
+          "abs_kappa_obs": 0.17985888755,
+          "r_shuffle": 2.35994702674,
+          "srrd_vs_flat_rnn_4x": 1.04981336201,
+          "n": 80
+        },
+        {
+          "angle_degrees": 75,
+          "coupling_cosine": 0.258819045103,
+          "abs_psi_update": 0.223561102257,
+          "psi_ci_low": 0.214763720886,
+          "psi_ci_high": 0.232239041876,
+          "abs_kappa_obs": 0.0931504592737,
+          "r_shuffle": 1.35833179863,
+          "srrd_vs_flat_rnn_4x": 1.04959906073,
+          "n": 80
+        },
+        {
+          "angle_degrees": 90,
+          "coupling_cosine": 6.12323399574e-17,
+          "abs_psi_update": 0.0328045984345,
+          "psi_ci_low": 0.0279158863043,
+          "psi_ci_high": 0.0378617267941,
+          "abs_kappa_obs": 0.000100854182282,
+          "r_shuffle": 1.01138934224,
+          "srrd_vs_flat_rnn_4x": 1.04955381731,
+          "n": 80
+        }
+      ],
+      "gates": [
+        {
+          "gate": "G0",
+          "test": "Data integrity",
+          "criterion": "0 violations",
+          "evidence": "0",
+          "status": "PASS"
+        },
+        {
+          "gate": "G1",
+          "test": "State equivalence",
+          "criterion": "SMD/energy UCI ≤ .10; reject ≤ .10",
+          "evidence": "0.0112 / 0.0031 / 0.085",
+          "status": "PASS"
+        },
+        {
+          "gate": "G2",
+          "test": "Positive control",
+          "criterion": "aligned detected",
+          "evidence": "|ψ| LCI 0.8573",
+          "status": "PASS"
+        },
+        {
+          "gate": "G3",
+          "test": "Negative specificity",
+          "criterion": "designated nulls within margins",
+          "evidence": "all pass",
+          "status": "PASS"
+        },
+        {
+          "gate": "G4",
+          "test": "OOD superiority",
+          "criterion": "UCI(R_OOD) ≤ .90",
+          "evidence": "1.0746",
+          "status": "FAIL"
+        },
+        {
+          "gate": "G5",
+          "test": "Order necessity",
+          "criterion": "LCI(R_shuffle) ≥ 1.10",
+          "evidence": "6.4966",
+          "status": "PASS"
+        },
+        {
+          "gate": "G6",
+          "test": "Update necessity",
+          "criterion": "LCI(R_frozen) ≥ 1.10",
+          "evidence": "1.3097",
+          "status": "PASS"
+        },
+        {
+          "gate": "G7",
+          "test": "Update interaction",
+          "criterion": "LCI(|ψ|) ≥ .20",
+          "evidence": "0.8573",
+          "status": "PASS"
+        },
+        {
+          "gate": "G8",
+          "test": "Capacity robustness",
+          "criterion": "UCI(SRRD/RNN 4×) ≤ .90",
+          "evidence": "1.0586",
+          "status": "FAIL"
+        },
+        {
+          "gate": "G9",
+          "test": "Imbalance robustness",
+          "criterion": "confound separated",
+          "evidence": "SMD .4822; reject 1.00",
+          "status": "PASS"
+        },
+        {
+          "gate": "G10",
+          "test": "Observation boundary",
+          "criterion": "signature → 0",
+          "evidence": "ρ 1.00; 90° |ψ| .0328",
+          "status": "PASS"
+        }
+      ]
+    }
+  }
+}

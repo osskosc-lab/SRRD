@@ -1,0 +1,8 @@
+{
+  "study_id": "SRRD-P2-BLACKBOX-2026-08-09",
+  "frozen_at_utc": "2026-08-09T11:20:07Z",
+  "preregistration_file": "preregistration/phase2.yaml",
+  "sha256": "2a5016997d7c6dac04517c9e1568af13ea2e9413f35139cd1d2e957fdb728f05",
+  "development_result_was_not_used_to_change_thresholds": true,
+  "confirmatory_outcomes_opened_after_this_freeze": true
+}
