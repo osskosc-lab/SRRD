@@ -1,0 +1,9 @@
+{
+  "study_id": "SRRD-P2B-HARD-2026-08-11",
+  "frozen_at_utc": "2026-08-11T03:04:00Z",
+  "preregistration_file": "preregistration/phase2b_hard.yaml",
+  "sha256": "3ae17581f329a8a4195955d1ce6983f4a63ff30daba1b52b19d11fe7cf110eb1",
+  "confirmatory_outcomes_opened_before_freeze": false,
+  "development_runs_may_not_change_thresholds": true,
+  "post_freeze_changes_require_new_study_id": true
+}
