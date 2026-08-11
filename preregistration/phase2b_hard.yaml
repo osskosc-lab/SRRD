@@ -1,0 +1,145 @@
+study:
+  id: SRRD-P2B-HARD-2026-08-11
+  title: End-to-End Inductive-Bias Falsification
+  stage: Phase 2B-hard
+  status: frozen-before-confirmatory-run
+  parent_result: C_history_survives_SRRD_decomposition_does_not
+  scientific_wording_before_run: "history matters; SRRD is not uniquely required"
+  primary_claim: >-
+    After observable-state equivalence and strictly nested train-only tuning,
+    an explicit fast-state / slow-rule SRRD decomposition provides held-out OOD
+    predictive information beyond end-to-end capacity-matched GRU, LSTM,
+    learned predictive-state, and actual-control History-MPC models.
+
+claims_not_tested:
+  - recovery of a privileged true latent rule
+  - unique ontology of self
+  - biological or deployed-system existence of SRRD
+  - equivalence between model weights and metaphysical identity
+
+black_box_contract:
+  allowed_model_inputs: [history, x_obs, c1, u2]
+  forbidden_model_inputs: [true_rule, latent_rule, slow_state, scenario_mechanism]
+  OOD_used_for_tuning: false
+  OOD_used_for_calibration: false
+  test_labels_visible_before_model_selection: false
+
+design:
+  generator: reuse_frozen_phase2_observable_generators
+  histories:
+    H1: [A, A, A, A, A, A, B, B, B, B, B, B, C, C, C, C]
+    H2: [B, B, B, B, B, B, A, A, A, A, A, A, C, C, C, C]
+  train_C2: [-0.8, -0.4, 0.4, 0.8]
+  frozen_OOD_C2: 1.2
+  C1: [sham, probe]
+  state_matching:
+    observable_vector: [y_t, y_t_minus_1, delta_y, u_t, observable_covariate]
+    exact_reset_prohibited: true
+    max_smd_margin: 0.10
+    energy_distance_margin: 0.10
+    paired_sign_flip_permutations: 199
+    maximum_false_rejection_rate: 0.10
+  primary_endpoint: multi-horizon_standardized_Gaussian_NLL
+  sigma_floor: 0.50
+
+models:
+  nominal_target_trainable_parameters: 2500
+  nominal_parameter_tolerance_fraction: 0.10
+  target:
+    name: srrd_bilevel_e2e
+    architecture: explicit_fast_state_plus_slow_history_rule_with_learned_update_gate
+  nominal_baselines:
+    - flat_gru_1x
+    - flat_lstm_1x
+    - learned_psr_1x
+    - history_mpc_1x
+  capacity_attack_baselines:
+    - flat_gru_4x
+    - flat_lstm_4x
+  learned_psr_requirement: predictive_state_bottleneck_trained_end_to_end_on_future_outcomes
+  history_mpc_requirement: action_conditioned_multistep_rollout_plus_counterfactual_action_selection
+
+optimization_budget:
+  tuning_scope: inside_each_seed_training_split_only
+  calibration_fraction: 0.25
+  tuning_trials_per_model: 6
+  max_epochs_per_trial: 80
+  early_stopping_patience: 10
+  gradient_clip_norm: 5.0
+  frozen_trial_grid:
+    - {lr: 0.001, weight_decay: 0.0}
+    - {lr: 0.003, weight_decay: 0.0}
+    - {lr: 0.001, weight_decay: 0.0001}
+    - {lr: 0.003, weight_decay: 0.0001}
+    - {lr: 0.0005, weight_decay: 0.0001}
+    - {lr: 0.002, weight_decay: 0.0005}
+  selection_metric: calibration_MSE
+  calibration_protocol: per_horizon_residual_sigma_with_floor
+  equal_budget_required_for_all_model_families: true
+
+sampling:
+  n_train_per_seed: 512
+  n_OOD_test_per_seed: 256
+  horizon: 6
+  base_seeds_per_scenario: 200
+  confirmation_seeds_total:
+    true_srrd_aligned: 400
+    true_srrd_orthogonal: 400
+    flat_high_dim_markov: 400
+    residual_state_imbalance: 400
+  seed_level_paired_bootstrap_replicates: 4000
+  common_random_numbers_across_scenarios: true
+  master_seed: 20260811
+
+estimands:
+  R_OOD: loss_SRRD / minimum_loss_across_nominal_end_to_end_baselines
+  R_capacity_4x: loss_SRRD / minimum_loss_across_4x_recurrent_baselines
+  R_shuffle: loss_SRRD_with_history_order_shuffled / loss_SRRD
+  R_frozen: loss_SRRD_with_slow_update_frozen / loss_SRRD
+  psi_update: (mu_H1_probe - mu_H1_sham) - (mu_H2_probe - mu_H2_sham)
+  nominal_param_deviation: maximum_absolute_fractional_parameter_deviation_from_SRRD
+  history_mpc_control_gain: random_action_cost / HistoryMPC_selected_action_cost
+
+control_audit:
+  role: implementation_validity_secondary_endpoint
+  primary_OOD_endpoint_remains_fixed_at_C2_1_2: true
+  action_grid: [-1.2, -0.8, -0.4, 0.0, 0.4, 0.8, 1.2]
+  action_penalty: 0.02
+  random_gain_lower_CI_threshold: 1.05
+
+thresholds:
+  OOD_superiority_upper_CI: 0.90
+  capacity_robustness_upper_CI: 0.90
+  shuffle_necessity_lower_CI: 1.10
+  frozen_necessity_lower_CI: 1.10
+  update_minimum_effect_lower_CI: 0.20
+  negative_update_equivalence_margin: 0.10
+  nominal_parameter_tolerance_fraction: 0.10
+  control_random_gain_lower_CI: 1.05
+
+gates:
+  G0: data_integrity_and_strict_OOD_holdout
+  G1: observable_state_equivalence
+  G2: nested_tuning_isolation_and_equal_optimization_budget
+  G3: nominal_parameter_fairness
+  G4: mechanism_positive_control_shuffle_frozen_update
+  G5: negative_control_specificity
+  G6: OOD_superiority_vs_strongest_nominal_end_to_end_baseline
+  G7: robustness_vs_4x_recurrent_capacity_attack
+  G8: training_stability
+  G9: residual_state_imbalance_robustness
+  G10: actual_control_HistoryMPC_competence
+
+decision_classes:
+  A_hard_operationally_identified: all validity, mechanism, OOD, capacity, specificity, and robustness gates pass
+  B_history_survives_SRRD_not_uniquely_required: mechanism survives but OOD superiority is absent
+  C_capacity_sensitive_not_unique: nominal OOD superiority passes but 4x recurrent capacity attack defeats it
+  D_SRRD_mechanism_falsified: order/update/reconstruction positive-control gate fails
+  E_unidentifiable_or_unfair_comparison: state matching, nominal capacity fairness, or History-MPC competence fails
+  F_implementation_failure: data integrity, tuning isolation, or training stability fails
+
+freeze_policy:
+  smoke_and_development_runs_may_not_modify_thresholds: true
+  confirmatory_run_requires_matching_SHA256_freeze: true
+  no_confirmatory_outcomes_may_be_opened_before_freeze: true
+  any_post_freeze_change_requires_new_study_id: true
